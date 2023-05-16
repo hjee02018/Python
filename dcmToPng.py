@@ -38,10 +38,16 @@ def preprocess(filename, resize_ratio=0.25):
 dicom_dir = "C:/Users/USER/Desktop/3Dircadb1.1/PATIENT_DICOM"
 
 # DICOM 파일들의 경로 리스트 가져오기
-filelist = glob.glob(os.path.join(dicom_dir, "*.dcm"))
+filelist = glob.glob(os.path.join(dicom_dir, "*"))
 
 # DICOM 파일들 전처리하여 PNG 파일로 저장
 for dicom_file in filelist:
+    print(dicom_file)
+    if not dicom_file.endswith(".dcm"):
+        new_filename = dicom_file + ".dcm"  # 파일 이름에 .dcm 확장자 추가
+        os.rename(dicom_file, new_filename)
+        dicom_file = new_filename  # 파일 경로에 .dcm 확장자 추가
+        print(dicom_file+" renamed!")
     pp_image = preprocess(dicom_file)
     pp_image = (pp_image * 255).astype(np.uint8)  # convert to uint8
     imageio.imwrite(os.path.splitext(dicom_file)[0] + ".png", pp_image, check_contrast=False)
