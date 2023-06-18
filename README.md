@@ -9,3 +9,6 @@
 
 ⓓ web.py
 - flask 서버 구축 및 3Dmol.js를 활용한 PDB Viewer 생성 
+
+ⓔ pdb_tidy_script.py
+- PDB_Tidy tool을 사용한 pdb 파일 검증
