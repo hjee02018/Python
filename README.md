@@ -12,3 +12,6 @@
 
 ⓔ pdb_tidy_script.py
 - PDB_Tidy tool을 사용한 pdb 파일 검증
+
+ⓕ complexList_web.py
+- complex 리스트 서버 구축
