@@ -1,12 +1,18 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
+# flask어플리켕션 객체 생성
+# __name__ : 현재 모듈
 app = Flask(__name__)
+
+# SQLAlchemy 설정 지정(yappcd.sqlite사용)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///yappcd.sqlite'
+# SQLAlchemy 모델 변경을 추적하는 기능 사용X (메모리 절약)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# SQLAlchemy 객체 생성 & 어플리케이션 연결
 db = SQLAlchemy(app)
 
-
+# SQLAlchemy를 사용해 Database 모델 정의
 class yappann(db.Model):
     __tablename__ = 'yappann'
     pdbid = db.Column(db.Text, primary_key=True)
@@ -42,9 +48,10 @@ def index1():
 def index2():
     return render_template('cdnexample.html', title='Browse YAPPCD')
 
-
+# ajax요청 처리
 @app.route('/api/data')
 def data():
+    # 'yappann' 모델로부터 데이터베이스 쿼리 객체 생성
     query = yappann.query
 
     # search filter
