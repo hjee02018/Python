@@ -3,18 +3,45 @@ import numpy as np
 import paddle
 from paddleseg.models import UNet
 from PIL import Image
+import sys
+import pydicom
+
+# get argument from user
+arg = sys.argv[1]
+input_folder = f'data/dicom/{arg}'
+output_folder = f'data/png/{arg}'
+input_dir = output_folder
+output_dir = f'data/output/{arg}'
+
+# Ensure output directory exists
+os.makedirs(output_folder, exist_ok=True)
+# Ensure output directory exists
+os.makedirs(output_dir, exist_ok=True)
+
+# ADD : DCM to PNG conversion
+dicom_files = [filename for filename in os.listdir(input_folder) if filename.endswith('.dcm')]
+
+for dicom_file in dicom_files:
+    ds = pydicom.dcmread(os.path.join(input_folder, dicom_file))
+    shape = ds.pixel_array.shape
+    image_2d = ds.pixel_array.astype(float)
+    image_2d_scaled = (np.maximum(image_2d, 0) / image_2d.max()) * 255.0
+    image_2d_scaled = np.uint8(image_2d_scaled)
+    if len(image_2d_scaled.shape) > 2:
+        image_2d_scaled = image_2d_scaled[:, :, 0]  # Take the first channel (grayscale)
+    img = Image.fromarray(image_2d_scaled, mode='L')  # 'L' mode indicates grayscale
+    output_png_path = os.path.join(output_folder, os.path.splitext(dicom_file)[0] + '.png')
+    img.save(output_png_path)
+
+print("Conversion complete.")
+
+# Segmentation
 
 # Pre-trained 모델 불러오기 및 설정
 model = UNet(num_classes=2)  # 클래스 수에 맞게 설정
 model_path = 'model.pdparams'  # 다운로드한 Pre-trained 모델(unet)의 경로
 model.set_dict(paddle.load(model_path))
 model.eval()
-
-input_dir = r'data/png/F208-LAD(3)'
-output_dir = 'data/output/F208-LAD(3)'
-
-# Ensure output directory exists
-os.makedirs(output_dir, exist_ok=True)
 
 # 세그멘테이션 수행 및 결과 저장
 for filename in os.listdir(input_dir):
