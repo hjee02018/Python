@@ -8,21 +8,20 @@ import pydicom
 
 # get argument from user
 arg = sys.argv[1]
-input_folder = f'data/dicom/{arg}'
-output_folder = f'data/png/{arg}'
-input_dir = output_folder
-output_dir = f'data/output/{arg}'
+dicom_folder = f'data/dicom/{arg}'
+png_folder = f'data/png/{arg}'
+output_folder = f'data/output/{arg}'
 
 # Ensure output directory exists
 os.makedirs(output_folder, exist_ok=True)
 # Ensure output directory exists
-os.makedirs(output_dir, exist_ok=True)
+os.makedirs(png_folder, exist_ok=True)
 
 # ADD : DCM to PNG conversion
-dicom_files = [filename for filename in os.listdir(input_folder) if filename.endswith('.dcm')]
+dicom_files = [filename for filename in os.listdir(dicom_folder) if filename.endswith('.dcm')]
 
 for dicom_file in dicom_files:
-    ds = pydicom.dcmread(os.path.join(input_folder, dicom_file))
+    ds = pydicom.dcmread(os.path.join(dicom_folder, dicom_file))
     shape = ds.pixel_array.shape
     image_2d = ds.pixel_array.astype(float)
     image_2d_scaled = (np.maximum(image_2d, 0) / image_2d.max()) * 255.0
@@ -30,7 +29,7 @@ for dicom_file in dicom_files:
     if len(image_2d_scaled.shape) > 2:
         image_2d_scaled = image_2d_scaled[:, :, 0]  # Take the first channel (grayscale)
     img = Image.fromarray(image_2d_scaled, mode='L')  # 'L' mode indicates grayscale
-    output_png_path = os.path.join(output_folder, os.path.splitext(dicom_file)[0] + '.png')
+    output_png_path = os.path.join(png_folder, os.path.splitext(dicom_file)[0] + '.png')
     img.save(output_png_path)
 
 print("Conversion complete.")
@@ -44,9 +43,9 @@ model.set_dict(paddle.load(model_path))
 model.eval()
 
 # 세그멘테이션 수행 및 결과 저장
-for filename in os.listdir(input_dir):
+for filename in os.listdir(png_folder):
     if filename.endswith('.png'):
-        image_path = os.path.join(input_dir, filename)
+        image_path = os.path.join(png_folder, filename)
         image = Image.open(image_path).convert('RGB')
         image = np.array(image)
         image = image.astype(np.float32) / 255.0
@@ -72,7 +71,7 @@ for filename in os.listdir(input_dir):
             for c in range(3):
                 colored_segmentation[mask, c] = color[c]
 
-        output_path = os.path.join(output_dir, filename)
+        output_path = os.path.join(output_folder, filename)
         result_image = Image.fromarray(colored_segmentation)
         result_image.save(output_path)
         print(f"Segmentation result saved at '{output_path}'")
