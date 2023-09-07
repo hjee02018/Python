@@ -17,3 +17,8 @@
 
 ⓕ complexList_web.py
 - complex 리스트 서버 구축 코드
+
+
+ⓖ curve_fitting_normalvectors.py
+- segmentation & curve fitting with normal vectors
+- Input should be crooped with ROI within origin png(or dicom files)
