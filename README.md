@@ -22,3 +22,7 @@
 ⓖ curve_fitting_normalvectors.py
 - segmentation & curve fitting with normal vectors
 - Input should be crooped with ROI within origin png(or dicom files)
+
+ⓗ sift_crop_input.py
+- crop input image based on sift algorithm
+- crop based on 2 points that are detected as starting point and end point of vessel
