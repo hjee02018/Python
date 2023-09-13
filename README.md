@@ -7,16 +7,16 @@
 - .dcm to .png conversion 
 
 ⓒ PDBlist.py
-- REST API를 활용해 small polypeptide list 출력 파이썬 프로그램
+- REST API small polypeptide list 
 
 ⓓ web.py
-- flask 서버 구축 및 3Dmol.js를 활용한 PDB Viewer 생성
+- PDV 3D Viewer with 3DMol.js with flask server
 
 ⓔ pdb_tidy_script.py
-- PDB_Tidy tool을 사용한 pdb 파일 검증 스크립트
+- pdb verification code with PDB_Tidy tool
 
 ⓕ complexList_web.py
-- complex 리스트 서버 구축 코드
+- pdb list server (complex ver)
 
 
 ⓖ curve_fitting_normalvectors.py
